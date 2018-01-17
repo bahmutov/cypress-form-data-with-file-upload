@@ -1,5 +1,5 @@
 /* eslint-env mocha */
-/* global cy, File, FileReader, XMLHttpRequest */
+/* global cy, FormData, File, FileReader, XMLHttpRequest */
 describe('multipart/form-data upload', () => {
   beforeEach(() => {
     cy.visit('localhost:3000')
@@ -77,14 +77,38 @@ describe('multipart/form-data upload', () => {
 
   // https://developer.mozilla.org/en-US/docs/Learn/HTML/Forms/Sending_forms_through_JavaScript
   it('works', () => {
-    cy.get('form').then(form$ => {
-      form$.on('submit', (e) => {
-        e.preventDefault()
-        const f = new File(['foo bar'], 'test-file.txt')
-        sendData('fileToUpload', f)
-      })
+    // transform HTML form submission into
+    // AJAX multiform submission
+
+    cy.get('input[name="userid"]').type('foo@bar.com')
+    // construct and upload FormData from form element
+    // https://developer.mozilla.org/en-US/docs/Web/API/FormData/Using_FormData_Objects
+    cy.get('form').then($el => {
+      const form = new FormData($el.get(0))
+
+      // the file input is empty, so delete it. We don't really have to
+      // delete it, since we are going to add same name after this
+      // and most servers are smart enough to keep the last value only
+      form.delete('fileToUpload')
+      // and append test file to upload
+      form.append('fileToUpload',
+        new File(['foo bar'], 'test-file.txt', {type: 'text/plain'}))
+
+      // add any desired custom fields using
+      // form.append("name", value)
+
+      var XHR = new XMLHttpRequest()
+      XHR.open('POST', '/upload')
+      XHR.send(form)
     })
-    cy.get('input[type="submit"]').click()
-    cy.get('@upload').its('response.body').should('equal', 'Uploaded test-file.txt')
+
+    // cy.get('form').then(form$ => {
+    //   form$.on('submit', (e) => {
+    //     e.preventDefault()
+    //     const f = new File(['foo bar'], 'test-file.txt')
+    //     sendData('fileToUpload', f)
+    //   })
+    // })
+    // cy.get('input[type="submit"]').click()
   })
 })
