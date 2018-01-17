@@ -1,5 +1,5 @@
 const express = require('express')
-const multer  = require('multer')
+const multer = require('multer')
 const upload = multer({ dest: 'uploads/' })
 
 const app = express()
@@ -12,14 +12,20 @@ app.post('/upload', upload.single('fileToUpload'), function (req, res) {
   console.log('/profile upload')
   console.log('req.file =', req.file)
   const name = req.file && req.file.originalname
+  const email = req.body && req.body.userid
   console.log('req.body', req.body)
-  res.send(`
+  res
+    .send(
+      `
     <html>
       <body>
         <p>Uploaded ${name || 'undefined'}</p>
+        <p>for ${email || 'unknown'}</p>
       </body>
     </html>
-  `).end()
+  `
+    )
+    .end()
   // res.redirect('/success.html')
 })
 
