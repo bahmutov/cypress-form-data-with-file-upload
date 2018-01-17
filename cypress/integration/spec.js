@@ -96,8 +96,6 @@ describe('multipart/form-data upload', () => {
     // AJAX multiform submission
 
     cy.get('input[name="userid"]').type('foo@bar.com')
-    // construct and upload FormData from form element
-    // https://developer.mozilla.org/en-US/docs/Web/API/FormData/Using_FormData_Objects
 
     let appAjax
     cy.window().its('XMLHttpRequest').then(ajax => {
@@ -106,8 +104,11 @@ describe('multipart/form-data upload', () => {
 
     cy.get('form').then(form$ => {
       form$.on('submit', e => {
+        // replace app's submission with Ajax upload
         e.preventDefault()
 
+        // construct and upload FormData from form element
+        // https://developer.mozilla.org/en-US/docs/Web/API/FormData/Using_FormData_Objects
         const form = new FormData(e.target)
 
         // the file input is empty, so delete it. We don't really have to
