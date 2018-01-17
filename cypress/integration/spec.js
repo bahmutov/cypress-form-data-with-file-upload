@@ -89,17 +89,15 @@ describe('multipart/form-data upload', () => {
   // constructed from the form + test file
   // https://developer.mozilla.org/en-US/docs/Learn/HTML/Forms/Sending_forms_through_JavaScript
   it('works', () => {
+    // spy on XHR calls
     cy.server()
     cy.route('POST', '/upload').as('upload')
 
-    // transform HTML form submission into
-    // AJAX multiform submission
-
     cy.get('input[name="userid"]').type('foo@bar.com')
 
-    let appAjax
-    cy.window().its('XMLHttpRequest').then(ajax => {
-      appAjax = ajax
+    let win
+    cy.window().then(w => {
+      win = w
     })
 
     cy.get('form').then(form$ => {
@@ -127,17 +125,28 @@ describe('multipart/form-data upload', () => {
         // instead of directly using XHR in THIS TEST iframe
         // use reference to the XHR from the APP's iframe
         // this way Cypress can observe and spy on XHR
-        // const XHR = new XMLHttpRequest()
-        const XHR = new appAjax()
+        const XHR = new win.XMLHttpRequest()
+        XHR.onload = response => {
+          // put the returned HTML page into the
+          // app's iframe using document.write
+          win.document.write(XHR.responseText)
+          // and set the correct url using history.pushState
+          // https://developer.mozilla.org/en-US/docs/Web/API/History_API#The_pushState()_method
+          win.history.pushState({}, '', XHR.url)
+        }
         XHR.open('POST', '/upload')
         XHR.send(form)
+        return true
       })
     })
 
+    // we can construct upload form ourselves
     // cy.get('form').then(form$ => {
     //   form$.on('submit', (e) => {
     //     e.preventDefault()
     //     const f = new File(['foo bar'], 'test-file.txt')
+    //     // transform HTML form submission into
+    //     // AJAX multiform submission
     //     sendData('fileToUpload', f)
     //   })
     // })
@@ -150,5 +159,10 @@ describe('multipart/form-data upload', () => {
       .its('response.body')
       .should('include', 'Uploaded test-file.txt')
       .and('include', 'for foo@bar.com')
+
+    // check current url and page
+    cy.url().should('match', /upload$/)
+    cy.contains('Uploaded test-file.txt')
+    cy.contains('for foo@bar.com')
   })
 })
