@@ -100,9 +100,11 @@ describe('multipart/form-data upload', () => {
       win = w
     })
 
+    // overwrite HTML submit action with
+    // XHR request that we can modify to add any File we want to test with
     cy.get('form').then(form$ => {
       form$.on('submit', e => {
-        // replace app's submission with Ajax upload
+        // replace form submission with Ajax upload
         e.preventDefault()
 
         // construct and upload FormData from form element
@@ -134,7 +136,8 @@ describe('multipart/form-data upload', () => {
           // https://developer.mozilla.org/en-US/docs/Web/API/History_API#The_pushState()_method
           win.history.pushState({}, '', XHR.url)
         }
-        XHR.open('POST', '/upload')
+        // 'post', '/upload'
+        XHR.open(e.target.method, e.target.action)
         XHR.send(form)
         return true
       })
