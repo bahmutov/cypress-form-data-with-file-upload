@@ -11,6 +11,10 @@ Testing multipart file upload in Cypress
 
 If the app uses "naked" HTML form submission with file input like [server/index.html](server/index.html), the Cypress test [spec.js](cypress/integration/spec.js) can either replace the submission on the fly with XHR.
 
+## Hack
+
+This is a solution implemented with what is possible today using JavaScript and Cypress 1.4.1. Of course using native events would be better than this hack - but that work needs to be done [#311](https://github.com/cypress-io/cypress/issues/311). This code might be a termporary answer to people who are blocked by file upload in [#170](https://github.com/cypress-io/cypress/issues/170)
+
 ## Install
 
 ```
@@ -56,8 +60,6 @@ it('uploads', () => {
 - `npm install`
 - start server [index.js](index.js) with `npm start`
 - open Cypress `npm run cy:open`
-
-This code could be made into tiny little helper to answer https://github.com/cypress-io/cypress/issues/170
 
 ### Small print
 
