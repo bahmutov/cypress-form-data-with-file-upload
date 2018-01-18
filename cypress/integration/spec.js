@@ -19,19 +19,20 @@ describe('multipart/form-data', () => {
       })
     }
     // get the form element and attach files to upload
-    // pass cy.window so we can spy on XHR call
-    cy.get('form').then(attachFiles(files, cy.window))
+    cy.get('form').then(attachFiles(files))
 
     // submit the form
     cy.get('input[type="submit"]').click()
 
-    // check current url and page
-    cy.url().should('match', /upload$/)
-    cy.contains('Uploaded test-file.txt')
-    cy.contains('for foo@bar.com')
-
     // check saved file
     cy.readFile('uploads/test-file.txt').should('equal', 'foo bar')
+
+    // check current url
+    cy.url().should('match', /upload$/)
+
+    // check new page contents
+    cy.contains('Uploaded test-file.txt')
+    cy.contains('for foo@bar.com')
   })
 
   it('upload with spying', () => {
@@ -50,8 +51,7 @@ describe('multipart/form-data', () => {
       })
     }
     // get the form element and attach files to upload
-    // pass cy.window so we can spy on XHR call
-    cy.get('form').then(attachFiles(files, cy.window))
+    cy.get('form').then(attachFiles(files))
 
     // submit the form
     cy.get('input[type="submit"]').click()

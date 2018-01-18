@@ -36,15 +36,18 @@ it('uploads', () => {
     })
   }
   // get the form element and attach files to upload
-  // pass cy.window so we can spy on XHR call
-  cy.get('form').then(attachFiles(files, cy.window))
+  cy.get('form').then(attachFiles(files))
 
   // submit the form
   cy.get('input[type="submit"]').click()
+
+  // check returned page
+  // or check url
+  // or spy on the XHR form submission
 })
 ```
 
-**Tip:** you can spy on the XHR call by passing `cy.window` method to the callback, see [spec.js](cypress/integration/spec.js)
+**Tip:** you can spy on the XHR call, see test in [spec.js](cypress/integration/spec.js)
 
 ![Upload test](images/upload.jpg)
 

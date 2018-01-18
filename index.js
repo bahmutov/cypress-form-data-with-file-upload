@@ -1,15 +1,11 @@
-/* global FormData, XMLHttpRequest */
+/* global cy, FormData, XMLHttpRequest */
 // submit HTML form using XHR by constructing FormData
 // https://developer.mozilla.org/en-US/docs/Learn/HTML/Forms/Sending_forms_through_JavaScript
 //
 // for examples see cypress/integration/spec.js
-const attachFiles = (files, getWindow) => form$ => {
-  if (!getWindow) {
-    getWindow = () => null
-  }
-
+const attachFiles = files => form$ => {
   let win
-  getWindow().then(w => {
+  cy.window().then(w => {
     win = w
   })
 
@@ -43,16 +39,14 @@ const attachFiles = (files, getWindow) => form$ => {
     // instead of directly using XHR in THIS TEST iframe
     // use reference to the XHR from the APP's iframe
     // this way Cypress can observe and spy on XHR
-    const XHR = win ? new win.XMLHttpRequest() : new XMLHttpRequest()
-    if (win) {
-      XHR.onload = response => {
-        // put the returned HTML page into the
-        // app's iframe using document.write
-        win.document.write(XHR.responseText)
-        // and set the correct url using history.pushState
-        // https://developer.mozilla.org/en-US/docs/Web/API/History_API#The_pushState()_method
-        win.history.pushState({}, '', XHR.url)
-      }
+    const XHR = new win.XMLHttpRequest()
+    XHR.onload = response => {
+      // put the returned HTML page into the
+      // app's iframe using document.write
+      win.document.write(XHR.responseText)
+      // and set the correct url using history.pushState
+      // https://developer.mozilla.org/en-US/docs/Web/API/History_API#The_pushState()_method
+      win.history.pushState({}, '', XHR.url)
     }
     // method and action will be something like 'post', '/upload'
     XHR.open(e.target.method, e.target.action)
