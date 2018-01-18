@@ -17,6 +17,10 @@
     "form",
     "file upload"
   ],
+  "files": [
+    "images",
+    "index.js"
+  ],
   "author": "Gleb Bahmutov <gleb.bahmutov@gmail.com>",
   "license": "ISC",
   "devDependencies": {

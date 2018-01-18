@@ -9,15 +9,50 @@
 
 Testing multipart file upload in Cypress
 
-If the app uses "naked" HTML form submission with file input [index.html](index.html), the Cypress test [spec.js](cypress/integration/spec.js) can either replace the submission on the fly with XHR. The form can be constructed manually or using `FormData(forElement)`. Fake test file can be added to the form data in both cases.
+If the app uses "naked" HTML form submission with file input like [server/index.html](server/index.html), the Cypress test [spec.js](cypress/integration/spec.js) can either replace the submission on the fly with XHR.
 
-**Tip:** use app's window's XMLHttpRequest object so your test can spy on the upload and its response.
+## Install
 
-## Instructions
+```
+npm install --save-dev cypress-form-data-with-file-upload
+```
+
+## Use
+
+From your spec file (see [spec.js](cypress/integration/spec.js) in this repo)
+
+```js
+const attachFiles = require('cypress-form-data-with-file-upload')
+beforeEach(() => {
+  cy.visit('localhost:3000')
+})
+it('uploads', () => {
+  // files to upload for each input[type="file"] by name
+  // we are going to construct a single text file in this test
+  // for <input type="file" name="fileToUpload" />
+  const files = {
+    fileToUpload: new File(['foo bar'], 'test-file.txt', {
+      type: 'text/plain'
+    })
+  }
+  // get the form element and attach files to upload
+  // pass cy.window so we can spy on XHR call
+  cy.get('form').then(attachFiles(files, cy.window))
+
+  // submit the form
+  cy.get('input[type="submit"]').click()
+})
+```
+
+**Tip:** you can spy on the XHR call by passing `cy.window` method to the callback, see [spec.js](cypress/integration/spec.js)
+
+![Upload test](images/upload.jpg)
+
+## Development
 
 - `npm install`
 - start server [index.js](index.js) with `npm start`
-- run Cypress with `npm test` or `npm run cy:run`
+- open Cypress `npm run cy:open`
 
 This code could be made into tiny little helper to answer https://github.com/cypress-io/cypress/issues/170
 
