@@ -7,6 +7,7 @@
     "test": "cypress run --record",
     "start": "node server",
     "cy:open": "cypress open",
+    "cy:run": "cypress run",
     "semantic-release": "semantic-action pre && npm publish && semantic-action post",
     "ci": "start-server-and-test http://localhost:3000"
   },
