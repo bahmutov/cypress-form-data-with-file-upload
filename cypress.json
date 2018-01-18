@@ -1,4 +1,6 @@
 {
   "viewportHeight": 200,
-  "viewportWidth": 300
+  "viewportWidth": 300,
+  "ignoreTestFiles": "construct-form.js",
+  "projectId": "9fap2d"
 }
