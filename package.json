@@ -4,7 +4,7 @@
   "description": "How to test HTTP form submission with file input using Cypress - a hack",
   "main": "index.js",
   "scripts": {
-    "test": "cypress run",
+    "test": "cypress run --record",
     "start": "node server",
     "cy:open": "cypress open",
     "semantic-release": "semantic-action pre && npm publish && semantic-action post",
