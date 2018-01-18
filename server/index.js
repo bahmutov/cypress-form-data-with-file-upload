@@ -1,6 +1,14 @@
 const express = require('express')
 const multer = require('multer')
-const upload = multer({ dest: 'uploads/' })
+const storage = multer.diskStorage({
+  destination: 'uploads/',
+  filename: function (req, file, cb) {
+    console.log('storing file', file)
+    console.log('under name', file.originalname)
+    cb(null, file.originalname)
+  }
+})
+const upload = multer({ storage })
 
 const app = express()
 
