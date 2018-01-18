@@ -4,7 +4,7 @@ const upload = multer({ dest: 'uploads/' })
 
 const app = express()
 
-app.use(express.static('.'))
+app.use(express.static(__dirname))
 
 app.post('/upload', upload.single('fileToUpload'), function (req, res) {
   // req.file is the `avatar` file

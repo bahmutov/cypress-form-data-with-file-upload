@@ -1,21 +1,25 @@
 {
-  "name": "multipart-upload",
+  "name": "cypress-form-data-with-file-upload",
   "version": "1.0.0",
-  "description": "",
+  "description": "How to test HTTP form submission with file input using Cypress - a hack",
   "main": "index.js",
   "scripts": {
     "test": "cypress open",
-    "start": "node index.js",
+    "start": "node server",
     "cy:run": "cypress run"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": [
+    "cypress",
+    "cypress.io",
+    "e2e",
+    "form",
+    "file upload"
+  ],
+  "author": "Gleb Bahmutov <gleb.bahmutov@gmail.com>",
   "license": "ISC",
-  "dependencies": {
-    "express": "^4.16.2",
-    "multer": "^1.3.0"
-  },
   "devDependencies": {
+    "express": "^4.16.2",
+    "multer": "^1.3.0",
     "cypress": "^1.4.1"
   }
 }
